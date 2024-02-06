@@ -3,6 +3,8 @@ instance/*
 !instance/.gitignore
 .webassets-cache
 .env
+.idea
+*.db
 
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
@@ -361,6 +363,7 @@ fabric.properties
 
 ### Python Patch ###
 poetry.toml
+
 
 # ruff
 .ruff_cache/
