@@ -1,5 +1,28 @@
 {% extends "base.html"%}
 {% block title%}Main{% endblock %}
 {% block content%}
-  <p>feed</p>
+  <div class="container-md post-list pt-2 pb-2">
+    <article class="post vt-post border p-2 mb-2">
+            <div class="row">
+                <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+                    <div class="caption">
+                        <h4 class="md-heading">The Heading Text Size Should Match</h4>
+                        <p> Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. </p>
+                    </div>
+                </div>
+            </div>
+    </article>
+    {% for post in posts %}
+      <article class="post vt-post border p-2 mb-2">
+            <div class="row">
+                <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+                    <div class="caption">
+                        <h4 class="md-heading">{{ post.title }}</h4>
+                        <p>{{ post.text }}</p>
+                    </div>
+                </div>
+            </div>
+      </article>
+    {% endfor %}
+  </div>
 {% endblock %}

@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
-from flask_login import LoginManager
-from flask import Flask
+from flask_login import LoginManager, current_user
+from flask import Flask, g, redirect
 from UserLogin import UserLogin
 
 from auth import auth as auth_blueprint
@@ -24,6 +24,14 @@ def create_app():
         app.register_blueprint(main_blueprint)
         app.register_blueprint(auth_blueprint)
 
+        @app.errorhandler(404)
+        def page_not_found(error):
+            return redirect('/login')
+
+        @app.before_request
+        def before_request():
+            g.user = current_user
+
         @login_manager.user_loader
         def load_user(user_id):
             print('user_id')
@@ -31,7 +39,7 @@ def create_app():
 
         @login_manager.unauthorized_handler
         def unauthorized():
-            return "unauthorized"
+            return redirect('/login')
 
         app.run(debug=True)
 
