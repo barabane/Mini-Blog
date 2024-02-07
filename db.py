@@ -25,9 +25,6 @@ class DB:
     def get_user_by_email(self, email: str):
         user = self.session.scalar(select(User).where(User.email.is_(email)))
 
-        if not user:
-            logger.error("Такой пользователь не найден")
-
         return user
 
     def get_user_by_id(self, user_id: int):
@@ -50,11 +47,10 @@ class DB:
         pass
 
     def get_all_posts(self):
-        posts = self.session.execute(select(User)).all()
-
+        posts = self.session.scalars(select(Post))
         return posts
 
-    def create_post(self, text: str, title: str, author_id: User.id, theme: str = ""):
+    def create_post(self, text: str, title: str, author_id: str, theme: str = ""):
         new_post = Post(
             id=str(uuid.uuid4()),
             text=text,

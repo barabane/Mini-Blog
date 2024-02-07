@@ -1,28 +1,36 @@
 {% extends "base.html"%}
 {% block title%}Main{% endblock %}
 {% block content%}
+  <form action="/feed" method="POST">
+    {{ form.csrf_token }}
+    <div class="form-group">
+    <label for="exampleFormControlInput1">{{ form.title.label }}</label>
+    <input type="text" name="title" class="form-control" id="exampleFormControlInput1" placeholder="Моя интереснейшая статья" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">{{ form.text.label }}</label>
+    <textarea class="form-control" name="text" id="exampleFormControlTextarea1" rows="3" placeholder="Однажды..." required></textarea>
+  </div>
+    <button type="submit" class="btn btn-primary">Опубликовать</button>
+  </form>
   <div class="container-md post-list pt-2 pb-2">
-    <article class="post vt-post border p-2 mb-2">
-            <div class="row">
-                <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
-                    <div class="caption">
-                        <h4 class="md-heading">The Heading Text Size Should Match</h4>
-                        <p> Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. </p>
-                    </div>
-                </div>
-            </div>
-    </article>
     {% for post in posts %}
       <article class="post vt-post border p-2 mb-2">
             <div class="row">
                 <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
                     <div class="caption">
-                        <h4 class="md-heading">{{ post.title }}</h4>
+                        <h4 class="md-heading">{{ post.title }} - {{ post.date.date() }} {{ post.date.strftime('%H:%M') }}</h4>
                         <p>{{ post.text }}</p>
                     </div>
                 </div>
             </div>
       </article>
+    {% endfor %}
+    {% for error in form.text.errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+    {% for error in form.title.errors %}
+      <p>{{ error }}</p>
     {% endfor %}
   </div>
 {% endblock %}

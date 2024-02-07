@@ -34,7 +34,6 @@ def create_app():
 
         @login_manager.user_loader
         def load_user(user_id):
-            print('user_id')
             return UserLogin().get_user_from_db(user_id)
 
         @login_manager.unauthorized_handler

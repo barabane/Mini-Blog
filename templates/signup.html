@@ -2,7 +2,6 @@
 {% block title %}Регистрация{% endblock %}
 {% block content %}
 <form class="container-lg justify-content-center align-items-center", action="/signup", method="POST">
-  <!-- Email input -->
   <div class="form-outline mb-4">
     <label class="form-label" for="form2Example1">{{ form.email.label }}</label>
     <input type="email" name="email" id="form2Example1" class="form-control" required/>
@@ -11,7 +10,6 @@
     </div>
   </div>
 
-  <!-- Password input -->
   <div class="form-outline mb-4">
     <label class="form-label" for="password">{{ form.password.label }}</label>
     <input type="password" name="password" id="password" class="form-control" required/>
@@ -28,15 +26,12 @@
     </div>
   </div>
 
-  <!-- 2 column grid layout for inline styling -->
   <div class="row mb-4">
     <div class="col">
-      <!-- Simple link -->
       <a href="#!">Forgot password?</a>
     </div>
   </div>
 
-  <!-- Submit button -->
   <button type="submit" class="btn btn-primary btn-block mb-4">Зарегистрироваться</button>
   {{ form.csrf_token }}
   {% with messages = get_flashed_messages() %}
