@@ -9,7 +9,7 @@ main = Blueprint('main', __name__)
 @main.route('/profile')
 @login_required
 def profile_handler():
-    return 'Profile'
+    return render_template("profile.html")
 
 
 @main.route('/feed', methods=['GET', 'POST'])
