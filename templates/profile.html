@@ -1,5 +1,62 @@
 {% extends "base.html"%}
 {% block title%}Profile{% endblock %}
 {% block content%}
-<p>Profile</p>
+<div class="container-fluid">
+  <div class="main-body">
+    <div class="row gutters-sm">
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+              <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle"
+                   width="150">
+              <div class="mt-3">
+                <h4>{{ current_user.email }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Your ID</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ current_user.id }}
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Email</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ current_user.email }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h4>Написать пост</h4>
+            <form action="">
+              <div class="form-group mb-2">
+                <label for="exampleInputEmail1">Заголовок поста</label>
+                <input type="email" class="form-control" id="exampleInputEmail1">
+              </div>
+              <div class="form-group mb-3">
+                <label for="exampleFormControlTextarea1">Содержание поста</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Опубликовать</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
