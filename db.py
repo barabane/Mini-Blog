@@ -1,14 +1,16 @@
 import uuid
 from datetime import datetime
+
 from loguru import logger
-from werkzeug.security import generate_password_hash
-from sqlalchemy.orm import create_session
 from sqlalchemy import create_engine, select
+from sqlalchemy.orm import create_session
+from werkzeug.security import generate_password_hash
 
 # models
 from models.Base import Base
-from models.User import User
+from models.Comment import Comment
 from models.Post import Post
+from models.User import User
 
 
 class DB:
@@ -43,24 +45,42 @@ class DB:
         self.session.commit()
         return new_user
 
-    def get_post(self):
-        pass
+    def get_post(self, post_id: str):
+        post = self.session.scalar(select(Post).where(Post.id.is_(post_id)))
+
+        return post
 
     def get_all_posts(self):
         posts = self.session.scalars(select(Post))
         return posts
 
-    def create_post(self, text: str, title: str, author_id: str, theme: str = ""):
+    def create_post(self, text: str, title: str, author: str, theme: str = ""):
         new_post = Post(
             id=str(uuid.uuid4()),
             text=text,
             title=title,
             theme=theme,
-            author_id=author_id,
+            author=author,
             date=datetime.now()
         )
 
         self.session.add(new_post)
+        self.session.commit()
+
+    def get_all_post_comments(self, post_id: str):
+        post_comments = self.session.scalars(select(Comment).where(Comment.post_id.is_(post_id)))
+
+        return post_comments
+
+    def create_comment(self, text: str, post_id: str, author: str):
+        new_comment = Comment(
+            id=str(uuid.uuid4()),
+            comment=text,
+            post_id=post_id,
+            author=author
+        )
+
+        self.session.add(new_comment)
         self.session.commit()
 
 

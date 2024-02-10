@@ -1,24 +1,28 @@
 {% extends "base.html"%}
 {% block title%}Главная{% endblock %}
 {% block content%}
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="row">
-                        <div class="col-lg">
-                            {% for post in posts%}
-                              <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="small text-muted">{{ post.date.date() }}, {{ post.date.strftime("%H:%M")}}</div>
-                                    <h2 class="card-title h4">{{ post.title }}</h2>
-                                    <p class="card-text">{{ post.text }}</p>
-                                    <a class="btn btn-primary" href="/post/{{ post.id }}">Читать →</a>
-                                </div>
-                              </div>
-                            {% endfor%}
-                        </div>
-                    </div>
-                </div>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <div class="col-lg">
+          {% for post in posts%}
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="small text-muted">{{ post.date.date() }}, {{ post.date.strftime("%H:%M")}}</div>
+              <h2 class="card-title h4">{{ post.title }}</h2>
+              {% if post.text|length < 200 %}
+              <p class="card-text">{{ post.text }}</p>
+              {%else %}
+              <p class="card-text">{{ post.text[:100] }}...</p>
+              {% endif %}
+              <a class="btn btn-primary" href="/post/{{ post.id }}">Читать дальше →</a>
             </div>
+          </div>
+          {% endfor%}
         </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

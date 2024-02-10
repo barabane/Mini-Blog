@@ -1,9 +1,10 @@
 import os
-from dotenv import load_dotenv
-from flask_login import LoginManager, current_user
-from flask import Flask, g, redirect
-from UserLogin import UserLogin
 
+from dotenv import load_dotenv
+from flask import Flask, g, redirect
+from flask_login import LoginManager, current_user
+
+from UserLogin import UserLogin
 from auth import auth as auth_blueprint
 from main import main as main_blueprint
 
@@ -17,7 +18,6 @@ def create_app():
     login_manager.init_app(app)
 
     with app.app_context():
-
         app.config['CSRF_ENABLED'] = True
         app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 

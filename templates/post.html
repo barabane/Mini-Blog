@@ -1,0 +1,41 @@
+{% extends "base.html"%}
+{% block title%}Пост{% endblock%}
+{% block content%}
+<div class="container">
+  <div class="row">
+    <div class="col-lg">
+      <article>
+        <header class="mb-4">
+          <h1 class="fw-bolder mb-1">{{ post.title }}</h1>
+          <div class="text-muted fst-italic mb-2">{{ post.date.date() }} | {{ post.author }}</div>
+          <!--                            <div class="badge bg-secondary text-decoration-none link-light">Web Design</div>-->
+          <!--                            <div class="badge bg-secondary text-decoration-none link-light">Freebies</div>-->
+        </header>
+        <section class="mb-5">
+          <p class="fs-5 mb-4">{{ post.text }}</p>
+        </section>
+      </article>
+      <section class="mb-5">
+        <div class="card bg-light">
+          <div class="card-body">
+            <h4>Комментарии</h4>
+            <form class="mb-4" method="POST" action="/add_comment/{{ post.id }}/{{ current_user.email }}">
+              <textarea class="form-control mb-2" rows="3" name="comment"
+                        placeholder="Что думаешь по этому поводу?..."></textarea>
+              <button type="submit" class="btn btn-primary">Опубликовать</button>
+            </form>
+            {% for comment in comments %}
+            <div class="d-flex mb-4">
+              <div class="ms-3">
+                <div class="fw-bold">{{ comment.author }}</div>
+                {{ comment.comment }}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock%}
