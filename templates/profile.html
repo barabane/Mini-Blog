@@ -42,19 +42,38 @@
         <div class="card mb-3">
           <div class="card-body">
             <h4>Написать пост</h4>
-            <form action="">
+            <form method="POST" action="/profile">
+              {{ form.csrf_token }}
               <div class="form-group mb-2">
                 <label for="exampleInputEmail1">Заголовок поста</label>
-                <input type="email" class="form-control" id="exampleInputEmail1">
+                <input type="text" class="form-control" id="exampleInputEmail1" name="title">
               </div>
               <div class="form-group mb-3">
                 <label for="exampleFormControlTextarea1">Содержание поста</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <textarea class="form-control" id="exampleFormControlTextarea1" name="text" rows="3"></textarea>
               </div>
               <button type="submit" class="btn btn-primary">Опубликовать</button>
             </form>
           </div>
         </div>
+        {% if posts != [] %}
+        {% for post in posts%}
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="small text-muted">{{ post.date.date() }}, {{ post.date.strftime("%H:%M")}}</div>
+            <h2 class="card-title h4">{{ post.title }}</h2>
+            {% if post.text|length < 200 %}
+            <p class="card-text">{{ post.text }}</p>
+            {% else %}
+            <p class="card-text">{{ post.text[:100] }}...</p>
+            {% endif %}
+            <a class="btn btn-primary" href="/post/{{ post.id }}">Читать дальше →</a>
+          </div>
+        </div>
+        {% endfor%}
+        {% elif posts == [] %}
+        <p>У вас пока нет постов</p>
+        {% endif %}
       </div>
     </div>
   </div>

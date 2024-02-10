@@ -54,6 +54,10 @@ class DB:
         posts = self.session.scalars(select(Post))
         return posts
 
+    def get_user_posts(self, user_email: str):
+        posts = self.session.scalars(select(Post).where(Post.author.is_(user_email)))
+        return posts.all()
+
     def create_post(self, text: str, title: str, author: str, theme: str = ""):
         new_post = Post(
             id=str(uuid.uuid4()),

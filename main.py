@@ -8,25 +8,24 @@ from models.Post import Post
 main = Blueprint('main', __name__)
 
 
-@main.route('/profile')
+@main.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile_handler():
-    return render_template("profile.html")
-
-
-@main.route('/feed', methods=['GET', 'POST'])
-@login_required
-def feed_handler():
     form = AddPostForm()
 
     if form.validate_on_submit():
-        user = db.get_user_by_id(current_user.get_id())
+        db.create_post(text=form.text.data, title=form.title.data, author=current_user.email)
+        return redirect('/profile')
 
-        db.create_post(author=user.email, title=form.title.data, text=form.text.data)
-        return redirect(location='/feed')
+    posts = db.get_user_posts(current_user.email)
+    return render_template("profile.html", posts=posts, form=form)
 
+
+@main.route('/feed')
+@login_required
+def feed_handler():
     posts = db.get_all_posts()
-    return render_template("feed.html", posts=posts, form=form)
+    return render_template("feed.html", posts=posts)
 
 
 @main.route('/post/<post_id>')
