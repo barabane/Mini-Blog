@@ -1,28 +1,36 @@
-from db import db, User
+from db import db, Users
 
 
 class UserLogin:
     def __init__(self):
+        self.__user = None
         self.id = None
         self.email = None
 
-    def create(self, user: User):
+    def create(self, user: Users):
         self.__user = user
         return self
 
     def get_user_from_db(self, user_id):
         self.__user = db.get_user_by_id(user_id=user_id)
-        self.id = self.__user.id
-        self.email = self.__user.email
+
+        if self.__user:
+            print("USERAAAAAAA", self.__user)
+            self.id = self.__user.id
+            self.email = self.__user.email
+
         return self
 
-    def is_authenticated(self):
+    @staticmethod
+    def is_authenticated():
         return True
 
-    def is_active(self):
+    @staticmethod
+    def is_active():
         return True
 
-    def is_anonymous(self):
+    @staticmethod
+    def is_anonymous():
         return False
 
     def get_id(self):

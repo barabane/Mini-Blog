@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from db import db
 from forms.add_post_form import AddPostForm
-from models.Post import Post
+from models.Posts import Posts
 
 main = Blueprint('main', __name__)
 
@@ -14,7 +14,7 @@ def profile_handler():
     form = AddPostForm()
 
     if form.validate_on_submit():
-        db.create_post(text=form.text.data, title=form.title.data, author=current_user.email)
+        db.create_post(text=form.text.data, title=form.title.data, author_id=current_user.id)
         return redirect('/profile')
 
     posts = db.get_user_posts(current_user.email)
@@ -31,7 +31,7 @@ def feed_handler():
 @main.route('/post/<post_id>')
 @login_required
 def post_handler(post_id):
-    post: Post = db.get_post(post_id)
+    post: Posts = db.get_post(post_id)
     post_comments = db.get_all_post_comments(post_id)
 
     return render_template("post.html", post=post, comments=post_comments)

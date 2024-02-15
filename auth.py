@@ -1,10 +1,11 @@
+from flask import Blueprint, render_template, redirect, flash, g
+from flask_login import login_user, logout_user, current_user
 from werkzeug.security import check_password_hash
-from flask import Blueprint, render_template, redirect, flash, g, url_for
-from flask_login import login_user, login_required, logout_user, current_user
-from forms.login_form import LoginForm
-from forms.signup_form import SignUpForm
+
 from UserLogin import UserLogin
 from db import db
+from forms.login_form import LoginForm
+from forms.signup_form import SignUpForm
 
 auth = Blueprint('auth', __name__)
 
@@ -18,7 +19,6 @@ def login_handler():
 
     if form.validate_on_submit():
         user = db.get_user_by_email(form.email.data)
-
         if not user:
             flash("Такого пользователя не существует")
             return redirect('/login')
