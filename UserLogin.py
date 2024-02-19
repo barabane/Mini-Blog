@@ -15,7 +15,6 @@ class UserLogin:
         self.__user = db.get_user_by_id(user_id=user_id)
 
         if self.__user:
-            print("USERAAAAAAA", self.__user)
             self.id = self.__user.id
             self.email = self.__user.email
 
