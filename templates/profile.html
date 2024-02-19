@@ -45,17 +45,17 @@
             <form method="POST" action="/profile">
               {{ form.csrf_token }}
               <div class="form-group mb-2">
-                <label for="exampleInputEmail1">Заголовок поста</label>
+                <label for="exampleInputEmail1">{{ form.title.label }}</label>
                 <input type="text" class="form-control" id="exampleInputEmail1" name="title">
               </div>
               <div class="form-group mb-3">
-                <label for="exampleFormControlTextarea1">Содержание поста</label>
+                <label for="exampleFormControlTextarea1">{{ form.text.label }}</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" name="text" rows="3"></textarea>
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text" id="hashtag">#</span>
-                <input type="text" class="form-control" placeholder="Хештег" name="hashtag" aria-label="hashtag"
-                       aria-describedby="hashtag">
+                <input type="text" class="form-control" placeholder="Хештег" name="hashtags" aria-label="hashtags"
+                       aria-describedby="hashtags">
               </div>
               <button type="submit" class="btn btn-primary">Опубликовать</button>
             </form>
@@ -67,6 +67,11 @@
           <div class="card-body">
             <div class="small text-muted">{{ post.date.date() }}, {{ post.date.strftime("%H:%M")}}</div>
             <h2 class="card-title h4">{{ post.title }}</h2>
+            {% for hashtag in hashtags %}
+            {% if hashtag.post_id == post.id%}
+            <span class="badge bg-secondary text-decoration-none link-light">#{{ hashtag.tag }}</span>
+            {% endif %}
+            {% endfor %}
             {% if post.text|length < 200 %}
             <p class="card-text">{{ post.text }}</p>
             {% else %}

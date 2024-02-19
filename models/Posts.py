@@ -10,6 +10,5 @@ class Posts(Base):
     id: Mapped[str_pk]
     text: Mapped[str] = mapped_column(nullable=False)
     title: Mapped[str] = mapped_column(nullable=False)
-    theme: Mapped[str] = mapped_column(String(50), nullable=True)
     author_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), nullable=False)
     date: Mapped[time_now]

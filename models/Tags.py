@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import String, INTEGER
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .BaseModel import Base
@@ -7,5 +7,6 @@ from .BaseModel import Base
 class Tags(Base):
     __tablename__ = "tags"
 
-    post_id: Mapped[str] = mapped_column(String(36), ForeignKey("posts.id"), primary_key=True, nullable=False)
+    id: Mapped[int] = mapped_column(INTEGER, primary_key=True)
+    post_id: Mapped[str] = mapped_column(String(36), nullable=False)
     tag: Mapped[str] = mapped_column(String(30), nullable=False)

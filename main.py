@@ -14,34 +14,40 @@ def profile_handler():
     form = AddPostForm()
 
     if form.validate_on_submit():
-        db.create_post(text=form.text.data, title=form.title.data, author_id=current_user.id)
+        db.create_post(text=form.text.data, title=form.title.data, author_id=current_user.id,
+                       hashtags=form.hashtags.data)
         return redirect('/profile')
 
-    posts = db.get_user_posts(current_user.email)
-    return render_template("profile.html", posts=posts, form=form)
+    posts = db.get_user_posts(current_user.id)
+    hashtags = db.get_all_hashtags()
+
+    return render_template("profile.html", posts=posts, hashtags=hashtags, form=form)
 
 
 @main.route('/feed')
 @login_required
 def feed_handler():
     posts = db.get_all_posts()
-    return render_template("feed.html", posts=posts)
+    hashtags = db.get_all_hashtags()
+    return render_template("feed.html", posts=posts, hashtags=hashtags)
 
 
 @main.route('/post/<post_id>')
 @login_required
 def post_handler(post_id):
     post: Posts = db.get_post(post_id)
+    hashtags = db.get_post_hashtags(post_id)
+    author = db.get_user_by_id(post.author_id)
     post_comments = db.get_all_post_comments(post_id)
 
-    return render_template("post.html", post=post, comments=post_comments)
+    return render_template("post.html", post=post, author=author.email, hashtags=hashtags, comments=post_comments)
 
 
 @main.route('/add_comment/<path:comment_info>', methods=['POST'])
 @login_required
 def add_comment_handler(comment_info):
     form = request.form
-    post_id, author = comment_info.split('/')
+    post_id, author_id = comment_info.split('/')
 
-    db.create_comment(text=form.get('comment'), post_id=post_id, author=author)
+    db.create_comment(text=form.get('comment'), post_id=post_id, author_id=author_id)
     return redirect(f'/post/{post_id}')

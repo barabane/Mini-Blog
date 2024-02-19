@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash
 from models.BaseModel import Base
 from models.Comments import Comments
 from models.Posts import Posts
+from models.Tags import Tags
 from models.Users import Users
 
 
@@ -17,6 +18,7 @@ class DB:
             self.engine = create_engine("sqlite:///miniblog.db", echo=True)
             self.session = sessionmaker(bind=self.engine)()
             self.metadata.create_all(bind=self.engine)
+            # self.metadata.drop_all(bind=self.engine)
 
         except Exception as ex:
             logger.error("При создании таблиц что-то пошло не так -> ")
@@ -53,19 +55,36 @@ class DB:
         posts = self.session.scalars(select(Posts))
         return posts.all()
 
+    def get_all_hashtags(self):
+        hashtags = self.session.scalars(select(Tags))
+        return hashtags.all()
+
+    def get_post_hashtags(self, post_id: str):
+        hashtags = self.session.scalars(select(Tags).where(Tags.post_id.is_(post_id)))
+        return hashtags
+
     def get_user_posts(self, user_id: str):
         posts = self.session.scalars(select(Posts).where(Posts.author_id.is_(user_id)))
         return posts.all()
 
-    def create_post(self, text: str, title: str, author_id: str, theme: str = ""):
+    def create_post(self, text: str, title: str, author_id: str, hashtags=""):
         new_post = Posts(
             text=text,
             title=title,
-            theme=theme,
             author_id=author_id,
         )
 
         self.session.add(new_post)
+        self.session.flush()
+
+        new_hashtags = []
+        for hashtag in hashtags.lower().split():
+            new_hashtags.append(Tags(
+                post_id=new_post.id,
+                tag=hashtag
+            ))
+
+        self.session.add_all(new_hashtags)
         self.session.commit()
 
     def get_all_post_comments(self, post_id: str):
@@ -73,11 +92,11 @@ class DB:
 
         return post_comments
 
-    def create_comment(self, text: str, post_id: str, author: str):
+    def create_comment(self, text: str, post_id: str, author_id: str):
         new_comment = Comments(
             comment=text,
             post_id=post_id,
-            author=author
+            author_id=author_id
         )
 
         self.session.add(new_comment)
