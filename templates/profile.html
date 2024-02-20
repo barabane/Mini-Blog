@@ -78,6 +78,7 @@
             <p class="card-text">{{ post.text[:100] }}...</p>
             {% endif %}
             <a class="btn btn-primary" href="/post/{{ post.id }}">Читать дальше →</a>
+            <a class="btn btn-danger" href="/profile/delete/{{ post.id }}">Удалить</a>
           </div>
         </div>
         {% endfor%}

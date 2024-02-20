@@ -13,7 +13,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=['GET', 'POST'])
 def login_handler():
     if current_user and current_user.is_authenticated:
-        return redirect('/feed')
+        return redirect('/feed/1')
 
     form = LoginForm()
 
@@ -26,7 +26,7 @@ def login_handler():
         if check_password_hash(pwhash=user.password, password=form.password.data):
             user_login = UserLogin().create(user)
             login_user(user_login, remember=True)
-            return redirect("/feed")
+            return redirect("/feed/1")
 
         flash("Неправильный логин/пароль")
         return redirect('/login')
@@ -36,7 +36,7 @@ def login_handler():
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup_handler():
     if g.user is not None and g.user.is_authenticated:
-        return redirect('/feed')
+        return redirect('/feed/1')
 
     form = SignUpForm()
 
@@ -49,7 +49,7 @@ def signup_handler():
 
         new_user = UserLogin().create(db.register_user(email=form.email.data, password=form.password.data))
         login_user(new_user, remember=True)
-        return redirect("/feed")
+        return redirect("/feed/1")
 
     return render_template("signup.html", form=form)
 

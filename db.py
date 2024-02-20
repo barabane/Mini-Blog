@@ -1,5 +1,5 @@
 from loguru import logger
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, delete, desc
 from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash
 
@@ -51,13 +51,17 @@ class DB:
 
         return post
 
-    def get_all_posts(self):
-        posts = self.session.scalars(select(Posts))
+    def get_all_posts(self, limit: int = 0, page: int = 0):
+        posts = self.session.execute(
+            select(Posts).offset((page - 1) * limit).limit(limit).order_by(desc(Posts.date))).scalars()
         return posts.all()
 
     def get_all_hashtags(self):
         hashtags = self.session.scalars(select(Tags))
         return hashtags.all()
+
+    def get_posts_qty(self):
+        return len(self.session.execute(select(Posts)).all())
 
     def get_post_hashtags(self, post_id: str):
         hashtags = self.session.scalars(select(Tags).where(Tags.post_id.is_(post_id)))
@@ -67,8 +71,9 @@ class DB:
         posts = self.session.scalars(select(Posts).where(Posts.author_id.is_(user_id)))
         return posts.all()
 
-    def create_post(self, text: str, title: str, author_id: str, hashtags=""):
+    def create_post(self, post_id: str, text: str, title: str, author_id: str, hashtags=""):
         new_post = Posts(
+            id=post_id,
             text=text,
             title=title,
             author_id=author_id,
@@ -100,6 +105,10 @@ class DB:
         )
 
         self.session.add(new_comment)
+        self.session.commit()
+
+    def delete_post(self, post_id: str):
+        self.session.execute(delete(Posts).where(Posts.id.is_(post_id)))
         self.session.commit()
 
 
