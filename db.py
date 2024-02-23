@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from loguru import logger
 from sqlalchemy import create_engine, select, delete, desc
 from sqlalchemy.orm import sessionmaker
@@ -38,6 +40,7 @@ class DB:
 
     def register_user(self, email: str, password: str):
         new_user = Users(
+            id=str(uuid4()),
             email=email,
             password=generate_password_hash(password=password, method='scrypt', salt_length=5)
         )

@@ -1,10 +1,12 @@
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
-from .BaseModel import Base, str_pk
+
+from .BaseModel import Base
 
 
 class Users(Base):
     __tablename__ = "users"
 
-    id: Mapped[str_pk]
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, nullable=False)
     email: Mapped[str] = mapped_column(nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
