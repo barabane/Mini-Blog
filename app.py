@@ -47,10 +47,7 @@ def create_app():
         def unauthorized():
             return redirect('/login')
 
-        # serve(app, host='0.0.0.0', port=8080)
-        app.run()
-
     return app
 
 
-create_app()
+app_ready = create_app()
