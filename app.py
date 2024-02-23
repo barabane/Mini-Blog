@@ -11,13 +11,13 @@ from routes.profile import profile as profile_blueprint
 
 load_dotenv()
 
-app = Flask(__name__)
-
-login_manager = LoginManager()
-login_manager.init_app(app)
-
 
 def create_app():
+    app = Flask(__name__)
+
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+
     with app.app_context():
         app.config['CSRF_ENABLED'] = True
         app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
@@ -47,7 +47,10 @@ def create_app():
         def unauthorized():
             return redirect('/login')
 
-        return app
+        # serve(app, host='0.0.0.0', port=8080)
+        app.run()
+
+    return app
 
 
-app = create_app()
+create_app()
