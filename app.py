@@ -11,46 +11,41 @@ from routes.profile import profile as profile_blueprint
 
 load_dotenv()
 
+app = Flask(__name__)
 
-def create_app():
-    app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
-    login_manager = LoginManager()
-    login_manager.init_app(app)
+with app.app_context():
+    app.config['CSRF_ENABLED'] = True
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-    with app.app_context():
-        app.config['CSRF_ENABLED'] = True
-        app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-
-        app.register_blueprint(main_blueprint)
-        app.register_blueprint(auth_blueprint)
-        app.register_blueprint(profile_blueprint)
-
-        @app.errorhandler(404)
-        def page_not_found(error):
-            return redirect('/login')
-
-        @app.errorhandler(404)
-        @login_required
-        def page_not_found_logged_in(error):
-            return redirect('/feed/1')
-
-        @app.before_request
-        def before_request():
-            g.user = current_user
-
-        @login_manager.user_loader
-        def load_user(user_id):
-            return UserLogin().get_user_from_db(user_id)
-
-        @login_manager.unauthorized_handler
-        def unauthorized():
-            return redirect('/login')
-
-        # serve(app, host='0.0.0.0', port=8080)
-        app.run()
-
-    return app
+    app.register_blueprint(main_blueprint)
+    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(profile_blueprint)
 
 
-create_app()
+    @app.errorhandler(404)
+    def page_not_found(error):
+        return redirect('/login')
+
+
+    @app.errorhandler(404)
+    @login_required
+    def page_not_found_logged_in(error):
+        return redirect('/feed/1')
+
+
+    @app.before_request
+    def before_request():
+        g.user = current_user
+
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return UserLogin().get_user_from_db(user_id)
+
+
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        return redirect('/login')
