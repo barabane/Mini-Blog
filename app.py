@@ -27,10 +27,6 @@ def create_app():
         app.register_blueprint(profile_blueprint)
 
         @app.errorhandler(404)
-        def page_not_found(error):
-            return redirect('/login')
-
-        @app.errorhandler(404)
         @login_required
         def page_not_found_logged_in(error):
             return redirect('/feed/1')
