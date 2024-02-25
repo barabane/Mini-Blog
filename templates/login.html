@@ -12,14 +12,27 @@
               <img class="mb-2" src="../static/imgs/locked.png" width="50px" height="50px" alt="">
               <h2 class="fw-bold mb-2 text-uppercase">Вход</h2>
               <p class="text-white-50 mb-5">С возвращением!</p>
-              <form action="/login">
-                <div class="form-floating mb-3">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Email">
-                  <label class="text-secondary" for="email">Email</label>
+              <form action="/login" method="POST">
+                <div class="form-floating text-start mb-3">
+                  <input type="email" class="form-control {{ 'is-invalid' if form.email.errors else '' }}" name="email"
+                         id="email"
+                         placeholder="Email">
+                  <label class="text-secondary" for="email">{{ form.email.label }}</label>
+                  {% for error in form.email.errors %}
+                  <div id="validation_email" class="invalid-feedback">
+                    {{ error }}
+                  </div>
+                  {% endfor %}
                 </div>
-                <div class="form-floating mb-3">
-                  <input type="password" class="form-control" name="password" id="password" placeholder="Пароль">
-                  <label class="text-secondary" for="password">Пароль</label>
+                <div class="form-floating text-start mb-3">
+                  <input type="password" class="form-control {{ 'is-invalid' if form.password.errors else '' }}"
+                         name="password" id="password" placeholder="Пароль">
+                  <label class="text-secondary" for="password">{{ form.password.label }}</label>
+                  {% for error in form.password.errors %}
+                  <div id="validation_password" class="invalid-feedback">
+                    {{ error }}
+                  </div>
+                  {% endfor %}
                 </div>
                 <!--                <p class="small mb-3 pb-lg-2"><a class="text-white-50" href="#!">Забыли пароль?</a></p>-->
                 <button class="btn btn-primary btn-lg px-5" type="submit">Подтвердить</button>
