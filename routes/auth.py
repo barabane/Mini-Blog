@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, flash, g
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user
 from werkzeug.security import check_password_hash
 
 from UserLogin import UserLogin
@@ -12,23 +12,17 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login_handler():
-    if current_user and current_user.is_authenticated:
-        return redirect('/feed/1')
-
     form = LoginForm()
-
     if form.validate_on_submit():
         user = db.get_user_by_email(form.email.data)
         if not user:
-            flash("Такого пользователя не существует")
             return redirect('/login')
 
         if check_password_hash(pwhash=user.password, password=form.password.data):
             user_login = UserLogin().create(user)
             login_user(user_login, remember=True)
-            return redirect("/feed/1")
+            return redirect("/")
 
-        flash("Неправильный логин/пароль")
         return redirect('/login')
     return render_template("login.html", form=form)
 
@@ -36,7 +30,7 @@ def login_handler():
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup_handler():
     if g.user is not None and g.user.is_authenticated:
-        return redirect('/feed/1')
+        return redirect('/')
 
     form = SignUpForm()
 

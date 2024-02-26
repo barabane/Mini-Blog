@@ -7,7 +7,9 @@
     <div class="col">
       <div class="row">
         <div class="col-lg">
+          {% for post in posts %}
           {% include 'components/post.html'%}
+          {% endfor%}
         </div>
       </div>
     </div>

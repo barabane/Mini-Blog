@@ -1,10 +1,10 @@
 <div class="card mb-3">
   <div class="card-header">
-    24.02.2024 13:52
+    {{ post.date.now().strftime("%d.%m.%Y") }} {{ post.date.now().strftime("%H:%M") }}
   </div>
   <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+    <h5 class="card-title">{{ post.title }}</h5>
+    <p class="card-text">{{ post.text }}</p>
+    <a href="#" class="btn btn-primary">Читать дальше</a>
   </div>
 </div>
