@@ -1,0 +1,10 @@
+<div class="card mb-3">
+  <div class="card-header">
+    {{ post.date.now().strftime("%d.%m.%Y") }} {{ post.date.now().strftime("%H:%M") }}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ post.title }}</h5>
+    <p class="card-text">{{ post.text }}</p>
+    <a href="#" class="btn btn-primary">Читать дальше</a>
+  </div>
+</div>

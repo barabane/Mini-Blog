@@ -1,0 +1,18 @@
+{% extends "base.html"%}
+{% block title%}Главная{% endblock %}
+{% include 'components/navbar.html' %}
+{% block content%}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <div class="col-lg">
+          {% for post in posts %}
+          {% include 'components/post.html'%}
+          {% endfor%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

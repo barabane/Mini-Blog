@@ -4,12 +4,12 @@ from wtforms.validators import EqualTo, DataRequired, InputRequired, Length, Ema
 
 
 class SignUpForm(FlaskForm):
-    email = EmailField('Email',
+    email = EmailField(label='Email',
                        validators=[DataRequired(message="Введите Email"), InputRequired(message="Введите Email"),
-                                   Email(message="Введите корректный Email")])
+                                   Email(message="Введите корректный Email")], default='')
     password = PasswordField('Пароль', validators=[InputRequired(message="Введите пароль"),
-                                                   EqualTo('repeat_password', message="Пароли не совпадают"),
+                                                   EqualTo('confirm_password', message="Пароли не совпадают"),
                                                    Length(min=7, message="Минимальная длинна пароля 7 символов")])
-    repeat_password = PasswordField('Повторите пароль', validators=[InputRequired(message="Введите пароль еще раз"),
-                                                                    Length(min=7,
-                                                                           message="Минимальная длинна пароля 7 символов")])
+    confirm_password = PasswordField('Повторите пароль', validators=[InputRequired(message="Введите пароль еще раз"),
+                                                                     Length(min=7,
+                                                                            message="Минимальная длинна пароля 7 символов")])

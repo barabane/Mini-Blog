@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from flask import Flask, g, redirect
-from flask_login import LoginManager, current_user, login_required
+from flask_login import LoginManager, current_user
 
 from UserLogin import UserLogin
 from routes.auth import auth as auth_blueprint
@@ -26,14 +26,10 @@ def create_app():
         app.register_blueprint(auth_blueprint)
         app.register_blueprint(profile_blueprint)
 
-        @app.errorhandler(404)
-        def page_not_found(error):
-            return redirect('/login')
-
-        @app.errorhandler(404)
-        @login_required
-        def page_not_found_logged_in(error):
-            return redirect('/feed/1')
+        # @app.errorhandler(404)
+        # @login_required
+        # def page_not_found_logged_in(error):
+        #     return redirect('/')
 
         @app.before_request
         def before_request():
@@ -45,7 +41,7 @@ def create_app():
 
         @login_manager.unauthorized_handler
         def unauthorized():
-            return redirect('/login')
+            return redirect('/')
 
     return app
 
