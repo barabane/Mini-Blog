@@ -1,11 +1,12 @@
-from uuid import uuid4
+import random
+import string
 
 from loguru import logger
-from sqlalchemy import create_engine, select, delete, text
+from sqlalchemy import create_engine, select, delete
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash
 
-# models
 from models.BaseModel import Base
 from models.Comments import Comments
 from models.Posts import Posts
@@ -20,11 +21,16 @@ class DB:
             self.engine = create_engine("sqlite:///miniblog.db", echo=True)
             self.session = sessionmaker(bind=self.engine)()
             self.metadata.create_all(bind=self.engine)
-            # self.metadata.drop_all(bind=self.engine)
 
         except Exception as ex:
             logger.error("При создании таблиц что-то пошло не так -> ")
             logger.error(ex)
+
+    @staticmethod
+    def generate_username(email: str):
+        random.seed(email)
+        random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=5))
+        return 'user_' + random_string
 
     def get_user_by_email(self, email: str):
         user = self.session.scalar(select(Users).where(Users.email.is_(email)))
@@ -32,30 +38,28 @@ class DB:
 
     def get_user_by_id(self, user_id: str):
         user = self.session.get(Users, user_id)
-
-        if not user:
-            return False
-
-        return user
+        return user or False
 
     def register_user(self, email: str, password: str):
-        new_user = Users(
-            id=str(uuid4()),
-            email=email,
-            password=generate_password_hash(password=password, method='scrypt', salt_length=5)
-        )
+        try:
+            new_user = Users(
+                email=email,
+                username=self.generate_username(email),
+                password=generate_password_hash(password=password, method='scrypt', salt_length=5)
+            )
 
-        self.session.add(new_user)
-        self.session.commit()
-        return new_user
+            self.session.add(new_user)
+            self.session.commit()
+            return new_user
+        except IntegrityError:
+            self.register_user(email, password)
 
     def get_post(self, post_id: str):
-        post = self.session.scalar(select(Posts).where(Posts.id.is_(post_id)))
-
-        return post
+        post = self.session.get(Posts, post_id)
+        return post or False
 
     def get_limit_posts(self, limit: int = 0, page: int = 0):
-        posts = self.session.scalars(select(Posts).offset((page - 1) * limit).limit(limit))
+        posts = self.session.execute(select(Posts).offset((page - 1) * limit).limit(limit)).scalars()
         return posts.all()
 
     def get_all_hashtags(self):
@@ -63,7 +67,7 @@ class DB:
         return hashtags.all()
 
     def get_posts_qty(self):
-        return len(self.session.execute(select(Posts)).all())
+        return self.session.query(Posts).count()
 
     def get_post_hashtags(self, post_id: str):
         hashtags = self.session.scalars(select(Tags).where(Tags.post_id.is_(post_id)))
@@ -73,9 +77,8 @@ class DB:
         posts = self.session.scalars(select(Posts).where(Posts.author_id.is_(user_id)))
         return posts.all()
 
-    def create_post(self, post_id: str, text: str, title: str, author_id: str, hashtags=""):
+    def create_post(self, text: str, title: str, author_id: str, hashtags=""):
         new_post = Posts(
-            id=post_id,
             text=text,
             title=title,
             author_id=author_id,
@@ -96,7 +99,6 @@ class DB:
 
     def get_all_post_comments(self, post_id: str):
         post_comments = self.session.scalars(select(Comments).where(Comments.post_id.is_(post_id)))
-
         return post_comments
 
     def create_comment(self, text: str, post_id: str, author_id: str):
