@@ -1,5 +1,6 @@
 import random
 import string
+from math import ceil
 
 from loguru import logger
 from sqlalchemy import create_engine, select, delete
@@ -66,8 +67,8 @@ class DB:
         hashtags = self.session.scalars(select(Tags))
         return hashtags.all()
 
-    def get_posts_qty(self):
-        return self.session.query(Posts).count()
+    def get_pages_count(self):
+        return ceil(self.session.query(Posts).count() / 5)
 
     def get_post_hashtags(self, post_id: str):
         hashtags = self.session.scalars(select(Tags).where(Tags.post_id.is_(post_id)))

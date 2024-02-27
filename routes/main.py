@@ -21,9 +21,11 @@ def post_handler(post_id):
 @main.route('/<int:page>')
 @main.route('/', defaults={'page': 1})
 def index_handler(page: int):
-    print(current_user.is_authenticated)
     posts = db.get_limit_posts(limit=5, page=page)
-    return render_template("index.html", posts=posts)
+    if not posts:
+        return redirect('/')
+    pages = db.get_pages_count()
+    return render_template("index.html", posts=posts, pages=pages, active_page_number=page)
 
 
 @main.route('/add_comment/<path:comment_info>', methods=['POST'])

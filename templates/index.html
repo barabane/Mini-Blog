@@ -13,6 +13,13 @@
         </div>
       </div>
     </div>
+    <nav class="d-flex align-items-center justify-content-center">
+      <ul class="pagination">
+        {% for page_number in range(pages) %}
+        <li class="page-item {{ 'active' if page_number + 1 == active_page_number else ''}}"><a class="page-link" href="/{{ page_number + 1 }}">{{ page_number + 1 }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
   </div>
 </div>
 {% endblock %}
