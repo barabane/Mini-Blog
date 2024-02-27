@@ -1,18 +1,19 @@
 {% extends "base.html"%}
-{% block title%}Пост{% endblock%}
+{% block title%}{{ post.title }}{% endblock%}
 {% block content%}
+{% include 'components/navbar.html' %}
 <div class="container">
   <div class="row">
     <div class="col-lg">
       <article>
         <header class="mb-4">
           <h1 class="fw-bolder mb-1">{{ post.title }}</h1>
-          <div class="text-muted fst-italic mb-2">{{ post.date.date() }} | {{ author }}</div>
-          {% for hashtag in hashtags %}
-          {% if hashtag.post_id == post.id%}
-          <span class="badge bg-secondary text-decoration-none link-light">#{{ hashtag.tag }}</span>
-          {% endif %}
-          {% endfor %}
+          <div class="text-muted fst-italic mb-2">{{ post.created_at.date() }} | {{ author }}</div>
+<!--          {% for hashtag in hashtags %}-->
+<!--          {% if hashtag.post_id == post.id%}-->
+<!--          <span class="badge bg-secondary text-decoration-none link-light">#{{ hashtag.tag }}</span>-->
+<!--          {% endif %}-->
+<!--          {% endfor %}-->
         </header>
         <section class="mb-5">
           <p class="fs-5 mb-4">{{ post.text }}</p>

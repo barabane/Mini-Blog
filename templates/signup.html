@@ -12,11 +12,12 @@
               <img class="mb-2" src="../static/imgs/locked.png" width="50px" height="50px" alt="">
               <h2 class="fw-bold mb-2 text-uppercase">Регистрация</h2>
               <p class="text-white-50 mb-5">Добро пожаловать!</p>
-              <form action="/signup" method="POST">
+              <form method="POST" action="{{ url_for('auth.signup_handler') }}">
+                {{ form.csrf_token }}
                 <div class="form-floating text-start mb-3">
                   <input type="email" class="form-control {{ 'is-invalid' if form.email.errors else '' }}" name="email"
                          id="email"
-                         placeholder="Email">
+                         placeholder="Email" required>
                   <label class="text-secondary" for="email">{{ form.email.label }}</label>
                   {% for error in form.email.errors %}
                   <div id="validation_email" class="invalid-feedback">
@@ -26,7 +27,7 @@
                 </div>
                 <div class="form-floating text-start mb-3">
                   <input type="password" class="form-control {{ 'is-invalid' if form.password.errors else '' }}"
-                         name="password" id="password" placeholder="Пароль">
+                         name="password" id="password" placeholder="Пароль" required>
                   <label class="text-secondary" for="password">{{ form.password.label }}</label>
                   {% for error in form.password.errors %}
                   <div id="validation_password" class="invalid-feedback">
@@ -37,7 +38,7 @@
                 <div class="form-floating text-start mb-3">
                   <input type="password" class="form-control {{ 'is-invalid' if form.confirm_password.errors else '' }}"
                          name="confirm_password" id="confirm_password"
-                         placeholder="Повторите пароль">
+                         placeholder="Повторите пароль" required>
                   <label class="text-secondary" for="confirm_password">{{ form.confirm_password.label }}</label>
                   {% for error in form.confirm_password.errors %}
                   <div id="validation_confirm_password" class="invalid-feedback">
@@ -45,6 +46,15 @@
                   </div>
                   {% endfor %}
                 </div>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-danger" role="alert">
+                  {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
                 <button class="btn btn-primary btn-lg px-5" type="submit">Подтвердить</button>
               </form>
             </div>

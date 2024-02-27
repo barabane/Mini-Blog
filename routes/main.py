@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from db import db
 from models.Posts import Posts
@@ -21,6 +21,7 @@ def post_handler(post_id):
 @main.route('/<int:page>')
 @main.route('/', defaults={'page': 1})
 def index_handler(page: int):
+    print(current_user.is_authenticated)
     posts = db.get_limit_posts(limit=5, page=page)
     return render_template("index.html", posts=posts)
 
