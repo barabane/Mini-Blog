@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, g, redirect
 from flask_login import LoginManager, current_user
+from loguru import logger
 
 from UserLogin import UserLogin
 from routes.auth import auth as auth_blueprint
@@ -10,6 +11,8 @@ from routes.main import main as main_blueprint
 from routes.profile import profile as profile_blueprint
 
 load_dotenv()
+
+logger.add("logs/user.log", format="{time} | {level} | {message}", rotation="1 day", compression="zip")
 
 
 def create_app():

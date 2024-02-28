@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, request
-from flask_login import login_required, current_user
+from flask_login import login_required
+from loguru import logger
 
 from db import db
 from models.Posts import Posts
@@ -8,18 +9,19 @@ main = Blueprint('main', __name__)
 
 
 @main.route('/post/<post_id>')
+@logger.catch
 def post_handler(post_id):
     post: Posts = db.get_post(post_id)
     hashtags = db.get_post_hashtags(post_id)
     author = db.get_user_by_id(post.author_id)
     post_comments = db.get_all_post_comments(post_id)
-
     return render_template("post.html", post=post, author=author.email, hashtags=hashtags,
                            comments=post_comments)
 
 
 @main.route('/<int:page>')
 @main.route('/', defaults={'page': 1})
+@logger.catch
 def index_handler(page: int):
     posts = db.get_limit_posts(limit=5, page=page)
     if not posts:
