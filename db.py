@@ -19,7 +19,7 @@ class DB:
     def __init__(self):
         try:
             self.metadata = Base.metadata
-            self.engine = create_engine("sqlite:///miniblog.db")
+            self.engine = create_engine("sqlite:///miniblog.db", echo=True)
             self.session = sessionmaker(bind=self.engine)()
             self.metadata.create_all(bind=self.engine)
 
