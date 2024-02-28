@@ -5,6 +5,7 @@ instance/*
 .env
 .idea
 *.db
+logs
 
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
