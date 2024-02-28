@@ -1,7 +1,6 @@
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-
-from .BaseModel import Base
+from models.BaseModel import Base
 
 
 class Tags(Base):

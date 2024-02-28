@@ -1,7 +1,6 @@
 from sqlalchemy import String, ForeignKey, INTEGER
 from sqlalchemy.orm import Mapped, mapped_column
-
-from .BaseModel import Base
+from models.BaseModel import Base
 
 
 class PostMetrics(Base):

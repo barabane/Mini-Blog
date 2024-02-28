@@ -1,7 +1,6 @@
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
-
-from .BaseModel import Base, time_now, uuid_pk
+from models.BaseModel import Base, uuid_pk, time_now
 
 
 class Posts(Base):
