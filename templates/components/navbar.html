@@ -16,7 +16,7 @@
       <a href="/login" class="btn btn-outline-primary me-2" type="submit">Вход</a>
       <a href="/signup" class="btn btn-primary" type="submit">Регистрация</a>
       {% else %}
-      <a href="/logout" class="btn btn-outline-primary me-2" type="submit">Выйти</a>
+      <a href="/profile/{{ current_user.username }}" class="btn btn-outline-primary me-2" type="submit">Профиль</a>
       {% endif %}
     </div>
   </div>

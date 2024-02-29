@@ -1,37 +1,50 @@
-from uuid import uuid4
+from loguru import logger
 
-from flask import Blueprint, redirect, render_template
-from flask_login import login_required, current_user
+from flask import Blueprint, redirect, render_template, flash
+from flask_login import login_required
 
 from db import db
-from forms.add_post_form import AddPostForm
+from forms.edit_profile_form import EditProfileForm
 
-profile = Blueprint('profile', __name__)
+profile = Blueprint('profile', __name__, template_folder="templates")
 
 
-@profile.route('/profile', methods=['GET', 'POST'])
+@profile.route('/<username>')
 @login_required
-def profile_handler():
-    form = AddPostForm()
+@logger.catch
+def profile_handler(username):
+    user = db.get_user_by_username(username)
 
+    if not user:
+        return redirect('/index')
+
+    return render_template("profile.html", user=user)
+
+
+@profile.route('/<username>/edit', methods=['GET', 'POST'])
+@login_required
+@logger.catch
+def profile_edit_handler(username):
+    user = db.get_user_by_username(username)
+
+    if not user:
+        return redirect('/')
+
+    form = EditProfileForm()
     if form.validate_on_submit():
-        db.create_post(post_id=str(uuid4()), text=form.text.data, title=form.title.data, author_id=current_user.id,
-                       hashtags=form.hashtags.data)
-        return redirect('/profile')
+        new_username = form.username.data
 
-    posts = db.get_user_posts(current_user.id)
-    hashtags = db.get_all_hashtags()
+        if db.get_user_by_username(new_username):
+            flash("Этот username занят", category="error")
+            return render_template("profile_edit.html", user=user, form=form)
 
-    return render_template("profile.html", posts=posts, hashtags=hashtags, form=form)
+        user = db.get_user_by_username(username)
+        user.email = form.email.data
+        user.username = form.username.data
+        user.about = form.about.data
 
+        db.update_user()
 
-@profile.route('/profile/delete/<post_id>')
-@login_required
-def delete_post_handler(post_id: str):
-    post = db.get_post(post_id)
+        return redirect(f'/profile/{user.username}')
 
-    if post.author_id != current_user.id:
-        return redirect('/profile')
-
-    db.delete_post(post_id)
-    return redirect('/profile')
+    return render_template("profile_edit.html", user=user, form=form)

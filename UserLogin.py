@@ -6,6 +6,7 @@ class UserLogin:
         self.__user = None
         self.id = None
         self.email = None
+        self.username = None
 
     def create(self, user: Users):
         self.__user = user
@@ -17,6 +18,7 @@ class UserLogin:
         if self.__user:
             self.id = self.__user.id
             self.email = self.__user.email
+            self.username = self.__user.username
 
         return self
 

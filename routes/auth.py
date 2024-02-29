@@ -18,9 +18,9 @@ def login_handler():
         form = LoginForm()
         if form.validate_on_submit():
             user = db.get_user_by_email(form.email.data)
+
             if not user:
                 flash('Такого пользователя не существует', category='error')
-                raise Exception
                 return redirect('/login')
 
             if check_password_hash(pwhash=user.password, password=form.password.data):
