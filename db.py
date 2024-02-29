@@ -68,7 +68,8 @@ class DB:
 
     def get_limit_posts(self, limit: int = 0, page: int = 0):
         posts = self.session.execute(select(Posts).offset((page - 1) * limit).limit(limit)).scalars()
-        return posts.all()
+        # return posts.all()
+        return False
 
     def get_all_hashtags(self):
         hashtags = self.session.scalars(select(Tags))

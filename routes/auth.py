@@ -32,8 +32,9 @@ def login_handler():
             flash('Неверный логин/пароль', category='error')
             return redirect('/login')
         return render_template("login.html", form=form)
-    except Exception:
+    except Exception as ex:
         flash('Что-то пошло не так, попробуйте снова')
+        logger.error(ex)
         return redirect('/login')
 
 
@@ -57,8 +58,9 @@ def signup_handler():
             logger.success(f"New user signed up {current_user.id}")
             return redirect("/")
         return render_template("signup.html", form=form)
-    except Exception:
+    except Exception as ex:
         flash('Что-то пошло не так, попробуйте снова')
+        logger.error(ex)
         return redirect('/signup')
 
 

@@ -7,16 +7,22 @@
     <div class="col">
       <div class="row">
         <div class="col-lg">
+          {% if posts %}
           {% for post in posts %}
           {% include 'components/post.html'%}
           {% endfor%}
+          {% else %}
+          <p></p>
+          {% endif %}
         </div>
       </div>
     </div>
     <nav class="d-flex align-items-center justify-content-center">
       <ul class="pagination">
         {% for page_number in range(pages) %}
-        <li class="page-item {{ 'active' if page_number + 1 == active_page_number else ''}}"><a class="page-link" href="/{{ page_number + 1 }}">{{ page_number + 1 }}</a></li>
+        <li class="page-item {{ 'active' if page_number + 1 == active_page_number else ''}}"><a class="page-link"
+                                                                                                href="/{{ page_number + 1 }}">{{
+          page_number + 1 }}</a></li>
         {% endfor %}
       </ul>
     </nav>
