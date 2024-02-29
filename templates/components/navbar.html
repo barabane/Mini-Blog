@@ -6,8 +6,11 @@
       MiniBlog
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+            aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path
+    d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
+      </span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -17,6 +20,7 @@
       <a href="/signup" class="btn btn-primary" type="submit">Регистрация</a>
       {% else %}
       <a href="/profile/{{ current_user.username }}" class="btn btn-outline-primary me-2" type="submit">Профиль</a>
+      <a href="/logout" class="btn btn-outline-primary me-2" type="submit">Выйти</a>
       {% endif %}
     </div>
   </div>

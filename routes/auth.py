@@ -55,7 +55,7 @@ def signup_handler():
 
             new_user = UserLogin().create(db.register_user(email=form.email.data, password=form.password.data))
             login_user(new_user, remember=True)
-            logger.success(f"New user signed up {current_user.id}")
+            logger.success(f"New user signed up {new_user.id}")
             return redirect("/")
         return render_template("signup.html", form=form)
     except Exception as ex:
@@ -70,4 +70,4 @@ def signup_handler():
 def logout_handler():
     logger.info(f"User {current_user.id} logged out")
     logout_user()
-    return redirect('/login')
+    return redirect('/')

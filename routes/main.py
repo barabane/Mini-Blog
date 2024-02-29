@@ -25,7 +25,7 @@ def post_handler(post_id):
 def index_handler(page: int):
     posts = db.get_limit_posts(limit=5, page=page)
     pages = db.get_pages_count()
-    return render_template("index.html", posts=posts, pages=0, active_page_number=page)
+    return render_template("index.html", posts=posts, pages=pages, active_page_number=page)
 
 
 @main.route('/add_comment/<path:comment_info>', methods=['POST'])
