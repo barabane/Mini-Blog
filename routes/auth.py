@@ -3,7 +3,6 @@ from flask_login import login_user, logout_user, login_required, current_user
 from loguru import logger
 from werkzeug.security import check_password_hash
 
-from UserLogin import UserLogin
 from db import db
 from forms.login_form import LoginForm
 from forms.signup_form import SignUpForm
@@ -27,9 +26,8 @@ def login_handler():
                 return redirect(url_for('auth.login_handler'))
 
             if check_password_hash(pwhash=user.password, password=form.password.data):
-                user_login = UserLogin().create(user)
-                login_user(user_login, remember=True)
-                logger.info(f"User {user_login.get_id()} logged in")
+                login_user(user, remember=True)
+                logger.info(f"User {user.id} logged in")
                 return redirect(url_for('main.index_handler'))
 
             flash('Неверный логин/пароль', category='error')
@@ -56,7 +54,7 @@ def signup_handler():
                 flash('Такой пользователь уже существует', category='error')
                 return render_template("signup.html", form=form)
 
-            new_user = UserLogin().create(db.register_user(email=form.email.data, password=form.password.data))
+            new_user = db.register_user(email=form.email.data, password=form.password.data)
             login_user(new_user, remember=True)
             logger.success(f"New user signed up {new_user.id}")
             return redirect(url_for('main.index_handler'))

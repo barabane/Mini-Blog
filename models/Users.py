@@ -1,9 +1,10 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 from models.BaseModel import Base, uuid_pk, time_now
+from flask_login import UserMixin
 
 
-class Users(Base):
+class Users(Base, UserMixin):
     __tablename__ = "users"
 
     id: Mapped[uuid_pk]

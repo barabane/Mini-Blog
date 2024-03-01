@@ -5,7 +5,7 @@ from flask import Flask, g, redirect, url_for
 from flask_login import LoginManager, current_user
 from loguru import logger
 
-from UserLogin import UserLogin
+from db import db
 from routes.auth import auth as auth_blueprint
 from routes.main import main as main_blueprint
 from routes.profile import profile as profile_blueprint
@@ -19,6 +19,7 @@ def create_app():
     app = Flask(__name__)
 
     login_manager = LoginManager()
+    login_manager.session_protection = "strong"
     login_manager.init_app(app)
 
     with app.app_context():
@@ -40,7 +41,7 @@ def create_app():
 
         @login_manager.user_loader
         def load_user(user_id):
-            return UserLogin().get_user_from_db(user_id)
+            return db.get_user_by_id(user_id=user_id)
 
         @login_manager.unauthorized_handler
         def unauthorized():
