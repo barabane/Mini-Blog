@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, redirect, flash, g
+from flask import Blueprint, render_template, redirect, flash, g, url_for
 from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import check_password_hash
 from loguru import logger
+from werkzeug.security import check_password_hash
 
 from UserLogin import UserLogin
 from db import db
@@ -15,6 +15,9 @@ auth = Blueprint('auth', __name__)
 @logger.catch
 def login_handler():
     try:
+        if current_user.is_authenticated:
+            return redirect(url_for('main.index_handler'))
+
         form = LoginForm()
         if form.validate_on_submit():
             user = db.get_user_by_email(form.email.data)
@@ -43,7 +46,7 @@ def login_handler():
 def signup_handler():
     try:
         if g.user is not None and g.user.is_authenticated:
-            return redirect('/')
+            return redirect(url_for('main.index_handler'))
 
         form = SignUpForm()
         if form.validate_on_submit():
