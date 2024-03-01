@@ -24,21 +24,21 @@ def login_handler():
 
             if not user:
                 flash('Такого пользователя не существует', category='error')
-                return redirect('/login')
+                return redirect(url_for('auth.login_handler'))
 
             if check_password_hash(pwhash=user.password, password=form.password.data):
                 user_login = UserLogin().create(user)
                 login_user(user_login, remember=True)
                 logger.info(f"User {user_login.get_id()} logged in")
-                return redirect("/")
+                return redirect(url_for('main.index_handler'))
 
             flash('Неверный логин/пароль', category='error')
-            return redirect('/login')
+            return redirect(url_for('auth.login_handler'))
         return render_template("login.html", form=form)
     except Exception as ex:
         flash('Что-то пошло не так, попробуйте снова')
         logger.error(ex)
-        return redirect('/login')
+        return redirect(url_for('auth.login_handler'))
 
 
 @auth.route('/signup', methods=['GET', 'POST'])
@@ -59,12 +59,12 @@ def signup_handler():
             new_user = UserLogin().create(db.register_user(email=form.email.data, password=form.password.data))
             login_user(new_user, remember=True)
             logger.success(f"New user signed up {new_user.id}")
-            return redirect("/")
+            return redirect(url_for('main.index_handler'))
         return render_template("signup.html", form=form)
     except Exception as ex:
         flash('Что-то пошло не так, попробуйте снова')
         logger.error(ex)
-        return redirect('/signup')
+        return redirect(url_for('auth.signup_handler'))
 
 
 @auth.route('/logout')
@@ -73,4 +73,4 @@ def signup_handler():
 def logout_handler():
     logger.info(f"User {current_user.id} logged out")
     logout_user()
-    return redirect('/')
+    return redirect(url_for('main.index_handler'))

@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, g, redirect
+from flask import Flask, g, redirect, url_for
 from flask_login import LoginManager, current_user
 from loguru import logger
 
@@ -44,7 +44,7 @@ def create_app():
 
         @login_manager.unauthorized_handler
         def unauthorized():
-            return redirect('/')
+            return redirect(url_for('main.index_handler'))
 
     return app
 

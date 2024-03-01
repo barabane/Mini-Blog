@@ -1,6 +1,6 @@
 from loguru import logger
 
-from flask import Blueprint, redirect, render_template, flash
+from flask import Blueprint, redirect, render_template, flash, url_for
 from flask_login import login_required
 
 from db import db
@@ -16,7 +16,7 @@ def profile_handler(username):
     user = db.get_user_by_username(username)
 
     if not user:
-        return redirect('/index')
+        return redirect(url_for('main.index_handler'))
 
     return render_template("profile.html", user=user)
 
@@ -28,7 +28,7 @@ def profile_edit_handler(username):
     user = db.get_user_by_username(username)
 
     if not user:
-        return redirect('/')
+        return redirect(url_for('main.index_handler'))
 
     form = EditProfileForm()
     if form.validate_on_submit():
