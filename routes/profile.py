@@ -1,24 +1,27 @@
+from flask import Blueprint, redirect, render_template, flash, url_for, abort
+from flask_login import login_required, current_user
 from loguru import logger
 
-from flask import Blueprint, redirect, render_template, flash, url_for
-from flask_login import login_required
-
 from db import db
+from forms.add_post_form import AddPostForm
 from forms.edit_profile_form import EditProfileForm
 
 profile = Blueprint('profile', __name__, template_folder="templates")
 
 
-@profile.route('/<username>')
+@profile.route('/<username>', methods=["GET"])
 @login_required
 @logger.catch
 def profile_handler(username):
     user = db.get_user_by_username(username)
 
+    form = AddPostForm()
+
     if not user:
         return redirect(url_for('main.index_handler'))
 
-    return render_template("profile.html", user=user)
+    posts = db.get_user_posts(current_user.id)
+    return render_template("profile.html", user=user, posts=posts, form=form)
 
 
 @profile.route('/<username>/edit', methods=['GET', 'POST'])
@@ -43,8 +46,22 @@ def profile_edit_handler(username):
         user.username = form.username.data
         user.about = form.about.data
 
-        db.update_user()
+        db.update_user(updated_user=user)
 
         return redirect(f'/profile/{user.username}')
 
     return render_template("profile_edit.html", user=user, form=form)
+
+
+@profile.route('/publish/<user_id>', methods=["POST"])
+@login_required
+@logger.catch
+def publish_handler(user_id):
+    form = AddPostForm()
+
+    if form.validate_on_submit():
+        if current_user.id == user_id:
+            db.create_post(text=form.text.data, title=form.title.data, author_id=user_id)
+            return redirect(url_for('profile.profile_handler', username=current_user.username))
+
+        return abort(403)

@@ -45,7 +45,10 @@ class DB:
         user = self.session.scalar(select(Users).where(Users.username.is_(username)))
         return user or False
 
-    def update_user(self):
+    def update_user(self, updated_user: Users):
+        user = self.session.get(Users, updated_user.id)
+        user = updated_user
+        self.session.flush()
         self.session.commit()
 
     def register_user(self, email: str, password: str):
