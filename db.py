@@ -3,7 +3,7 @@ import string
 from math import ceil
 
 from loguru import logger
-from sqlalchemy import create_engine, select, delete
+from sqlalchemy import create_engine, select, delete, asc, desc
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash
@@ -39,7 +39,7 @@ class DB:
 
     def get_user_by_id(self, user_id: str):
         user = self.session.get(Users, user_id)
-        return user or False
+        return user or None
 
     def get_user_by_username(self, username: str):
         user = self.session.scalar(select(Users).where(Users.username.is_(username)))
@@ -70,7 +70,8 @@ class DB:
         return post or False
 
     def get_limit_posts(self, limit: int = 0, page: int = 0):
-        posts = self.session.execute(select(Posts).offset((page - 1) * limit).limit(limit)).scalars()
+        posts = self.session.execute(
+            select(Posts).offset((page - 1) * limit).limit(limit).order_by(desc(Posts.created_at))).scalars()
         return posts.all()
 
     def get_all_hashtags(self):
@@ -85,7 +86,7 @@ class DB:
         return hashtags
 
     def get_user_posts(self, user_id: str):
-        posts = self.session.scalars(select(Posts).where(Posts.author_id.is_(user_id)))
+        posts = self.session.scalars(select(Posts).where(Posts.author_id.is_(user_id)).order_by(desc(Posts.created_at)))
         return posts.all()
 
     def create_post(self, text: str, title: str, author_id: str, hashtags=""):

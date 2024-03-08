@@ -1,8 +1,8 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, g, redirect, url_for
-from flask_login import LoginManager, current_user
+from flask import Flask, redirect, url_for
+from flask_login import LoginManager
 from loguru import logger
 
 from db import db
@@ -35,9 +35,8 @@ def create_app():
         # def page_not_found_logged_in(error):
         #     return redirect('/')
 
-        @app.before_request
-        def before_request():
-            g.user = current_user
+        # @app.before_request
+        # def before_request():
 
         @login_manager.user_loader
         def load_user(user_id):

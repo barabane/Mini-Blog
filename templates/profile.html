@@ -50,32 +50,48 @@
         <div class="card mb-3">
           <div class="card-body">
             <h3>Новый пост</h3>
-            <div class="row">
-              <form action="/profile/publish/{{ current_user.id }}" method="POST">
-                {{ form.csrf_token }}
-                <h4>Заголовок</h4>
-                <input type="text" class="form-control mb-3" name="title">
-                <h4>Содержание</h4>
-                <textarea class="form-control mb-2" name="text" rows="3"></textarea>
-                <button type="submit" class="btn btn-primary">Опубликовать</button>
-              </form>
-            </div>
+            <p class="row">
+            <form class="needs-validation" action="/profile/{{ current_user.username }}" method="POST" novalidate>
+              {{ form.csrf_token }}
+              <div class="col-md-4">
+                <label for="title" class="form-label">Заголовок</label>
+                <input type="text" class="form-control {{ 'is-invalid' if form.title.errors else '' }}" id="title"
+                       name="title" value="{{ form.title.data }}" required>
+                {% for error in form.title.errors %}
+                <div class="invalid-feedback">
+                  {{ error }}
+                </div>
+                {% endfor %}
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="text" class="form-label">Содержание</label>
+                <input type="text" class="form-control {{ 'is-invalid' if form.text.errors else '' }}" id="text"
+                       name="text" value="{{ form.text.data }}" required>
+                {% for error in form.text.errors %}
+                <div class="invalid-feedback">
+                  {{ error }}
+                </div>
+                {% endfor %}
+              </div>
+              <button type="submit" class="btn btn-primary">Опубликовать</button>
+            </form>
           </div>
         </div>
-        <div class="card">
-          <div class="card-body">
-            <h3>Ваши посты</h3>
-            {% if posts %}
-            {% for post in posts %}
-            {% include 'components/post.html'%}
-            {% endfor %}
-            {% else %}
-            <p class="text-center">Постов пока нет</p>
-            {% endif %}
-          </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h3>Ваши посты</h3>
+          {% if posts %}
+          {% for post in posts %}
+          {% include 'components/post.html'%}
+          {% endfor %}
+          {% else %}
+          <p class="text-center">Постов пока нет</p>
+          {% endif %}
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 {% endblock %}

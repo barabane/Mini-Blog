@@ -14,7 +14,7 @@ auth = Blueprint('auth', __name__)
 @logger.catch
 def login_handler():
     try:
-        if current_user.is_authenticated:
+        if current_user is not None and current_user.is_authenticated:
             return redirect(url_for('main.index_handler'))
 
         form = LoginForm()
@@ -43,7 +43,7 @@ def login_handler():
 @logger.catch
 def signup_handler():
     try:
-        if g.user is not None and g.user.is_authenticated:
+        if current_user is not None and current_user.is_authenticated:
             return redirect(url_for('main.index_handler'))
 
         form = SignUpForm()
